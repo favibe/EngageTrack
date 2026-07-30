@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngageTrack - Participant</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/participant.css') }}">
+    <!-- MediaPipe Face Mesh -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh@0.4/face_mesh.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+    <!-- Socket.IO -->
+    <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+    <!-- PeerJS -->
+    <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+</head>
+<body>
+    <div id="join-form">
+    <h1>🎓 EngageTrack</h1>
+    <h3>Session: {{ session_name }}</h3>
+    <p>Enter your name to join</p>
+    <input type="text" id="name-input" placeholder="Your full name" autofocus>
+    <button onclick="joinSession()">Join Session</button>
+    <p id="join-error" style="color: #f44336; display:none;"></p>
+</div>
+
+<!-- MONITORING AREA -->
+<div id="monitor-area" style="display: none;">
+    <h2 id="welcome-text">Welcome!</h2>
+    
+    <!-- INSTRUCTOR INFO -->
+    <div class="instructor-card">
+        <h3>👨‍🏫 Instructor: {{ session_info.admin_name }}</h3>
+        <p style="color: #888; font-size: 14px;">
+            Currently presenting: {{ session_info.session_name }}
+        </p>
+        <p style="margin-top: 10px;">
+            <strong>Your engagement is being monitored.</strong>
+            <span id="mute-status">🔊 You can speak</span>
+        </p>
+    </div>
+    
+    <!-- VIDEO GRID (Everyone's video tiles) -->
+    <div id="video-grid">
+        <!-- Video tiles will be added here dynamically -->
+    </div>
+    
+    <!-- SHARED TRANSCRIPTION FEED -->
+    <div id="transcript-display">
+        <strong>Live Transcription (Everyone in Session):</strong>
+        <div id="transcript-feed" style="margin-top: 10px; font-size: 14px; line-height: 1.6;">
+            <p style="color: #666; font-style: italic;">Waiting for speech...</p>
+        </div>
+    </div>
+    
+    <!-- LEAVE SESSION BUTTON -->
+    <div style="text-align: center;">
+        <button class="leave-btn" onclick="leaveSession()">Leave Session</button>
+    </div>
+</div>
+
+<!-- Hidden video for MediaPipe processing -->
+<video id="mediapipe-video" style="display:none;" autoplay muted playsinline></video>
+<script>
+    const SESSION_ID  = "{{ session_id }}";
+</script>
+<script src="{{ url_for('static', filename='js/participant.js') }}"></script>
+</body>
+
+</html>
