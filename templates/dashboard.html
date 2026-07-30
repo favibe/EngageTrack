@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <title>EngageTrack - Dashboard</title>
+</head>
+<body>
+    <div class="controls">
+        <button class="btn-join" onclick="joinAsParticipant()">
+            🎥 Join Session (Start Teaching)
+        </button>
+        <button class="btn-mute-all" onclick="muteAllParticipants()">
+            🔇 Mute All Students
+        </button>
+        <button class="btn-unmute-all" onclick="unmuteAllParticipants()">
+            🔊 Unmute All Students
+        </button>
+        <button class="btn-end" onclick="endSession()">
+            ⏹️ End Session & Generate Report
+        </button>
+    </div>
+
+    <h2>Participants (<span id="participant-count">0</span>)</h2>
+    <div id="participants-grid">
+        <p style="color: #666;">Waiting for participants to join...</p>
+    </div>
+
+    <h2>Event Log</h2>
+    <div id="event-log">
+        <p style="color:#666;">No events yet.</p>
+    </div>
+
+    <h2>Live Transcriptions</h2>
+    <div id="transcript-box">
+        <p style="color:#666;">No speech detected yet.</p>
+    </div>
+    <script>
+    const SESSION_ID  = "{{ session_id }}";
+    const ADMIN_NAME  = "{{ session_info.admin_name }}";
+</script>
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+
+</body>
+</html>
