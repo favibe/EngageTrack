@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EngageTrack - Admin</title>
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>EngageTrack</h1>
+        <p><a href="/history" style="color: #2196F3; text-decoration: none;">📚 View Past Sessions</a></p>
+        <h3>Create a Monitoring Session</h3>
+        <input type="text" id="admin-name" placeholder="Your name (Admin)">
+        <input type="text" id="session-name" placeholder="Session name (e.g. Lecture - Week 5)">
+        <button onclick="createSession()">Create Session</button>
+
+        <div id="session-result" style="display: none;">
+            <h3>Session Created!</h3>
+            <p><strong>Session ID:</strong> <span id="session-id-display" style="color:#4CAF50; font-size: 24px;"></span></p>
+            <p>Share this link with participants:</p>
+            <div class="link-box" id="join-link-display"></div>
+            <button class="copy-btn" onclick="copyLink()">Copy Join Link</button>
+            <button onclick="goToDashboard()" style="background: #007bff; margin-top: 10px;">Open Dashboard →</button>
+        </div>
+    </div>
+
+<script src="{{ url_for('static', filename='js/index.js') }}"></script>
+</body>
+</html>
