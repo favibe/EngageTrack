@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session History - EngageTrack</title>
+   <link rel="stylesheet" href="{{ url_for('static', filename='css/history.css') }}">
+</head>
+<body>
+     <h1>📚 Session History</h1>
+    <p><a href="/" style="color: #2196F3;">← Back to Home</a></p>
+    
+    {% if sessions %}
+    <table>
+        <thead>
+            <tr>
+                <th>Session ID</th>
+                <th>Session Name</th>
+                <th>Instructor</th>
+                <th>Created</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for s in sessions %}
+            <tr>
+                <td><strong>{{ s.session_id }}</strong></td>
+                <td>{{ s.session_name }}</td>
+                <td>{{ s.admin_name }}</td>
+                <td>{{ s.created_at[:19] }}</td>
+                <td class="{{ 'status-ended' if s.status == 'ended' else 'status-active' }}">
+                    {{ s.status | capitalize }}
+                </td>
+                <td>
+                    <a href="/report/{{ s.session_id }}" class="btn">View Report</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <p style="color: #666;">No past sessions found.</p>
+    {% endif %}
+</body>
+</body>
+</html>
