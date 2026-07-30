@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session Report - EngageTrack</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/report.css') }}">
+</head>
+<body>
+    <div class="container">
+
+    <!-- Header -->
+    <div class="header">
+        <h1>📊 EngageTrack Session Report</h1>
+        <p>
+            <strong>Session ID:</strong> {{ session_id }} &nbsp;|&nbsp;
+            <strong>Name:</strong> {{ session_info.session_name }} &nbsp;|&nbsp;
+            <strong>Admin:</strong> {{ session_info.admin_name }} &nbsp;|&nbsp;
+            <strong>Created:</strong> {{ session_info.created_at[:19] }}
+        </p>
+    </div>
+
+    <!-- Download Section -->
+    <!-- Replace the download-section div in report.html with this: -->
+    <div class="download-section">
+        <span>📥 Download Reports:</span>
+        
+        <!-- CSV Downloads -->
+        <a href="/download/{{ session_id }}/engagement_log" class="btn btn-green">
+            📊 Engagement Log (CSV)
+        </a>
+        <a href="/download/{{ session_id }}/transcription" class="btn btn-blue">
+            💬 Transcription (CSV)
+        </a>
+        
+        <!-- PDF Downloads -->
+        <a href="/download/{{ session_id }}/engagement_pdf" class="btn btn-orange">
+            📄 Engagement Summary (PDF)
+        </a>
+        <a href="/download/{{ session_id }}/transcription_pdf" class="btn btn-orange">
+            📄 Transcription (PDF)
+        </a>
+        
+        <!-- Graphs -->
+        <a href="/download/{{ session_id }}/graphs/attention_over_time" class="btn btn-blue">
+            📈 Attention Graph
+        </a>
+        <a href="/download/{{ session_id }}/graphs/fatigue_events" class="btn btn-orange">
+            📈 Fatigue Graph
+        </a>
+        <a href="/download/{{ session_id }}/graphs/hand_motion_events" class="btn btn-blue">
+            📈 Hand Motion Graph
+        </a>
+        
+        <a href="/" class="btn btn-gray">← New Session</a>
+    </div>
+
+    <!-- Summary Stats -->
+    <div class="stats-grid">
+        <div class="stat-box">
+            <h3>Participants</h3>
+            <div class="num blue">{{ summary | length }}</div>
+        </div>
+        <div class="stat-box">
+            <h3>Total Events</h3>
+            <div class="num green">{{ all_events | length }}</div>
+        </div>
+        <div class="stat-box">
+            <h3>Distractions</h3>
+            <div class="num red">
+                {{ all_events | selectattr('event_type', 'equalto', 'Attention') 
+                   | rejectattr('description', 'equalto', 'Focused') | list | length }}
+            </div>
+        </div>
+        <div class="stat-box">
+            <h3>Fatigue Events</h3>
+            <div class="num orange">
+                {{ all_events | selectattr('event_type', 'equalto', 'Fatigue') | list | length }}
+            </div>
+        </div>
+    </div>
+
+    <!-- Per-Participant Details -->
+    <div class="section">
+        <h2>Participant Breakdown</h2>
+        
+        {% if summary %}
+            {% for pid, p in summary.items() %}
+            <div class="participant-card">
+                <h3>👤 {{ p.name }}</h3>
+                
+                <div class="mini-stats">
+                    <div class="mini-stat">
+                        <span class="value red">{{ p.distraction_count }}</span>
+                        <span class="label">Distractions</span>
+                    </div>
+                    <div class="mini-stat">
+                        <span class="value orange">{{ p.fatigue_count }}</span>
+                        <span class="label">Fatigue</span>
+                    </div>
+                    <div class="mini-stat">
+                        <span class="value blue">{{ p.hand_count }}</span>
+                        <span class="label">Hand Events</span>
+                    </div>
+                    <div class="mini-stat">
+                        <span class="value green">{{ p.events | length }}</span>
+                        <span class="label">Total</span>
+                    </div>
+                </div>
+
+                {% if p.events %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 80px;">Time</th>
+                            <th style="width: 120px;">Type</th>
+                            <th style="width: 180px;">Event</th>
+                            <th>Speech Context</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for event in p.events %}
+                        <tr>
+                            <td>{{ event.timestamp }}</td>
+                            <td>
+                                {% if event.event_type == 'Attention' %}
+                                    {% if 'Focused' in event.description %}
+                                        <span class="badge badge-focus">Attention</span>
+                                    {% else %}
+                                        <span class="badge badge-distract">Attention</span>
+                                    {% endif %}
+                                {% elif event.event_type == 'Fatigue' %}
+                                    <span class="badge badge-fatigue">Fatigue</span>
+                                {% else %}
+                                    <span class="badge badge-hand">Hand</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ event.description }}</td>
+                            <td>
+                                {% if event.speech_context %}
+                                    "{{ event.speech_context }}"
+                                {% else %}
+                                    <span class="context">—</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                    <div class="empty-state">No events recorded</div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-state">No participants joined this session</div>
+        {% endif %}
+    </div>
+
+    <!-- Full Timeline -->
+    <div class="section">
+        <h2>Complete Event Timeline</h2>
+        
+        {% if all_events %}
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 80px;">Time</th>
+                    <th style="width: 150px;">Participant</th>
+                    <th style="width: 120px;">Type</th>
+                    <th style="width: 180px;">Event</th>
+                    <th>Speech Context</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for event in all_events %}
+                <tr>
+                    <td>{{ event.timestamp }}</td>
+                    <td><strong>{{ event.participant_name }}</strong></td>
+                    <td>
+                        {% if event.event_type == 'Attention' %}
+                            {% if 'Focused' in event.description %}
+                                <span class="badge badge-focus">Attention</span>
+                            {% else %}
+                                <span class="badge badge-distract">Attention</span>
+                            {% endif %}
+                        {% elif event.event_type == 'Fatigue' %}
+                            <span class="badge badge-fatigue">Fatigue</span>
+                        {% else %}
+                            <span class="badge badge-hand">Hand</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ event.description }}</td>
+                    <td>
+                        {% if event.speech_context %}
+                            <em style="color: #aaa;">"{{ event.speech_context }}"</em>
+                        {% else %}
+                            <span class="context">—</span>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <div class="empty-state">No events were logged during this session</div>
+        {% endif %}
+    </div>
+
+</div>
+</body>
+</html>
