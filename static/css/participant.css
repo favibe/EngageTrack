@@ -1,0 +1,133 @@
+body { 
+            font-family: Arial, sans-serif; 
+            background: #0a0a0a; 
+            color: white; 
+            margin: 0; 
+            padding: 20px; 
+        }
+        
+        /* Join Form */
+        #join-form { 
+            max-width: 400px; 
+            margin: 100px auto; 
+            text-align: center; 
+            background: #1a1a1a;
+            padding: 30px;
+            border-radius: 12px;
+        }
+        #join-form input { 
+            width: 100%; 
+            padding: 12px; 
+            margin: 10px 0; 
+            border-radius: 6px; 
+            border: none; 
+            font-size: 16px; 
+        }
+        #join-form button { 
+            width: 100%; 
+            padding: 14px; 
+            background: #4CAF50; 
+            color: white; 
+            border: none; 
+            border-radius: 6px; 
+            font-size: 18px; 
+            cursor: pointer; 
+        }
+        
+        /* Monitor Area */
+        #monitor-area { display: none; }
+        
+        /* Video Grid */
+        #video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+            max-width: 1400px;
+        }
+        
+        .video-container {
+            position: relative;
+            background: #1a1a1a;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 3px solid #333;
+        }
+        
+        .video-container.speaking {
+            border-color: #4CAF50;
+            box-shadow: 0 0 20px rgba(76, 175, 80, 0.5);
+        }
+        
+        .video-container video {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            display: block;
+        }
+        
+        .video-label {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(0,0,0,0.8);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        
+        .video-status {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.8);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+        
+        .status-focused { color: #4CAF50; }
+        .status-distracted { color: #f44336; }
+        
+        /* Instructor Card */
+        .instructor-card {
+            background: #1a1a1a;
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            max-width: 1400px;
+        }
+        
+        /* Transcription Feed */
+        #transcript-display {
+            margin-top: 20px;
+            background: #121212;
+            padding: 15px;
+            border-radius: 8px;
+            max-width: 1400px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        #mute-status {
+            background: #4CAF50;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+        
+        .leave-btn {
+            padding: 12px 30px;
+            background: #DC3545;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+        }
